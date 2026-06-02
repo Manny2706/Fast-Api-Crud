@@ -6,7 +6,7 @@ A small full-stack demo with FastAPI, SQLAlchemy, JWT auth, role-based access, a
 
 - GitHub repository: [Manny2706/Fast-Api-Crud](https://github.com/Manny2706/Fast-Api-Crud)
 - Live API: [https://fast-api-crud-balg.onrender.com](https://fast-api-crud-balg.onrender.com)
-- API docs: [https://fast-api-crud-balg.onrender.com/docs](https://fast-api-crud-balg.onrender.com/docs)
+- API docs: [in progress]()
 
 ## Features
 
