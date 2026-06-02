@@ -119,9 +119,6 @@ pip install -r requirements.txt
 uvicorn fastapi_app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Open the API docs here:
-
-- [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
 ### 4) Run the frontend
 
@@ -138,7 +135,7 @@ Then open:
 
 ## Environment Variables
 
-- `SECRET_KEY`: JWT secret used by the backend
+- `SECRET_KEY`: secret used by the backend
 - `DATABASE_URL`: database connection string
 
 Example local `.env`:
@@ -154,15 +151,6 @@ DATABASE_URL=sqlite:///./db.sqlite3
 - The frontend is best deployed separately on Vercel or another static host.
 - Update `frontend/env-config.js` or inject `window.__API_BASE` at build time so the frontend points to the deployed API.
 - For production, use PostgreSQL instead of SQLite.
-
-## Deployment Commands
-
-Push the current branch to GitHub:
-
-```powershell
-cd "c:\Users\mayan\Desktop\New folder\fastapi-vanillajs"
-git push origin main
-```
 
 ## API Endpoints
 
