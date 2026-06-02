@@ -38,7 +38,8 @@
   </div>
 
   <script>
-    const API_BASE = 'http://127.0.0.1:8000/api/v1'
+    <!-- Initialize API base URL from environment variables -->
+    const API_BASE = window.__API_BASE || 'http://127.0.0.1:8000/api/v1'
 
     function setMsg(id, txt){ document.getElementById(id).innerText = txt }
 

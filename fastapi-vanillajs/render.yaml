@@ -1,0 +1,34 @@
+# Render manifest for deploying the FastAPI backend and a managed Postgres database.
+# Replace `repo` with your GitHub repo URL if you want Render to auto-detect.
+
+services:
+  - type: web
+    name: fastapi-vanillajs-backend
+    env: python
+    plan: free
+    repo: https://github.com/<your-username>/<your-repo>
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn fastapi_app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        # Leave value empty here; set via the Render dashboard after the DB is created
+        value: ""
+      - key: SECRET_KEY
+        value: ""
+
+# Managed Postgres database
+databases:
+  - name: fastapi-vanillajs-db
+    engine: postgres
+    version: 15
+    plan: starter
+    # The DATABASE_URL will be available in the dashboard after creation
+
+# Notes:
+# 1. After pushing this file to your repo, go to https://dashboard.render.com and
+#    create a new service by importing this repository. Render will read this manifest.
+# 2. Create the managed Postgres database in Render (it may be created automatically from the manifest),
+#    then copy its DATABASE_URL into the web service environment variable `DATABASE_URL`.
+# 3. Ensure `psycopg2-binary` is added to requirements.txt if you use Postgres in production.
+# 4. For static frontend, deploy the `frontend` folder to Vercel or Render static site.
