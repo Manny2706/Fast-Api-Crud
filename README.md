@@ -3,9 +3,8 @@
 A small full-stack demo with FastAPI, SQLAlchemy, JWT auth, role-based access, and a vanilla JavaScript frontend.
 
 ## Live Links
-
-- GitHub repository: [Manny2706/Fast-Api-Crud](https://github.com/Manny2706/Fast-Api-Crud)
-- Live API: [https://fast-api-crud-balg.onrender.com](https://fast-api-crud-balg.onrender.com)
+
+- Live API: [https://fastapi-demo-frontend.netlify.app/](https://fastapi-demo-frontend.netlify.app/)
 - API docs: [in progress]()
 
 ## Features
