@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FastAPI Demo</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;max-width:900px;margin:2rem auto;padding:1rem}
+    input,button{padding:.5rem;margin:.25rem}
+    .card{border:1px solid #ddd;padding:1rem;margin:1rem 0}
+  </style>
+</head>
+<body>
+  <h1>FastAPI Demo</h1>
+
+  <div class="card">
+    <h3>Register</h3>
+    <input id="reg_username" placeholder="username" />
+    <input id="reg_email" placeholder="email" />
+    <input id="reg_password" type="password" placeholder="password" />
+    <button id="btn_register">Register</button>
+    <div id="reg_msg"></div>
+  </div>
+
+  <div class="card">
+    <h3>Login</h3>
+    <input id="login_username" placeholder="username or email" />
+    <input id="login_password" type="password" placeholder="password" />
+    <button id="btn_login">Login</button>
+    <div id="login_msg"></div>
+  </div>
+
+  <div class="card">
+    <h3>Dashboard</h3>
+    <button id="btn_fetch_tasks">Fetch Tasks</button>
+    <button id="btn_create_sample">Create Sample Task</button>
+    <div id="tasks"></div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://127.0.0.1:8000/api/v1'
+
+    function setMsg(id, txt){ document.getElementById(id).innerText = txt }
+
+    document.getElementById('btn_register').onclick = async () => {
+      const username = document.getElementById('reg_username').value
+      const email = document.getElementById('reg_email').value
+      const password = document.getElementById('reg_password').value
+      const res = await fetch(API_BASE + '/auth/register', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({username,email,password})
+      })
+      const data = await res.json()
+      console.log(res, data)
+      setMsg('reg_msg', res.ok? 'Registered: '+data.username : (data.detail||JSON.stringify(data)))
+    }
+    
+    document.getElementById('btn_login').onclick = async () => {
+      const username = document.getElementById('login_username').value
+      const password = document.getElementById('login_password').value
+      const body = new URLSearchParams(); body.append('username', username); body.append('password', password)
+      const res = await fetch(API_BASE + '/auth/login', {method:'POST', body})
+      const data = await res.json()
+      console.log(res, data)
+      if(res.ok){ localStorage.setItem('token', data.access_token); setMsg('login_msg','Logged in') } else { setMsg('login_msg', data.detail||JSON.stringify(data)) }
+    }
+
+    async function authFetch(path, opts={}){
+      const token = localStorage.getItem('token')
+      opts.headers = opts.headers || {}
+      if(token) opts.headers['Authorization'] = 'Bearer '+token
+      const res = await fetch(API_BASE + path, opts)
+      let data
+      try{ data = await res.json() }catch(e){ data = null }
+      return { res, data }
+    }
+
+    document.getElementById('btn_fetch_tasks').onclick = async () => {
+      const {res,data} = await authFetch('/tasks')
+      if(!res.ok){ setMsg('tasks', 'Error: ' + (data.detail||JSON.stringify(data))); return }
+      const el = document.getElementById('tasks'); el.innerHTML = ''
+      data.forEach(t => { const d = document.createElement('div'); d.innerText = `${t.id}: ${t.title}`; el.appendChild(d) })
+    }
+
+    document.getElementById('btn_create_sample').onclick = async () => {
+      const title = 'Sample '+Math.floor(Math.random()*1000)
+      const {res,data} = await authFetch('/tasks', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({title,description:'created from UI'})})
+      setMsg('tasks', res.ok ? 'Created: '+data.title : 'Error: '+(data.detail||JSON.stringify(data)))
+    }
+  </script>
+</body>
+</html>
